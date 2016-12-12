@@ -3,7 +3,7 @@
 (function (angular) {
   angular.module('wooCommercePluginWidget')
     .constant('TAG_NAMES', {
-          WOOCOMMERCE_INFO: 'wooCommerceInfo'
+      WOOCOMMERCE_INFO: 'wooCommerceInfo'
     })
     .constant('STATUS_CODE', {
       INSERTED: 'inserted',
@@ -24,19 +24,20 @@
     })
     .constant('LAYOUTS', {
       itemListLayout: [
-        {name: "Item_List_Layout_1"},
-        {name: "Item_List_Layout_2"}
+        { name: "Item_List_Layout_1" },
+        { name: "Item_List_Layout_2" }
       ],
       sectionListLayout: [
-        {name: "Section_List_Layout_1"},
-        {name: "Section_List_Layout_2"}
+        { name: "Section_List_Layout_1" },
+        { name: "Section_List_Layout_2" }
       ]
     })
     .constant('PAGINATION', {
       sectionsCount: 10,
       itemsCount: 10
     })
-    .constant('SERVER_URL', {
-        link: "http://proxy.buildfire.com"
+    .constant('PROXY_SERVER', {
+      serverUrl: "http://proxy.buildfire.com",
+      secureServerUrl: 'https://proxy.buildfire.com'
     });
 })(window.angular);
