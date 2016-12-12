@@ -33,6 +33,6 @@
             ]
         })
         .constant('SERVER_URL', {
-            link: "http://proxy.buildfire.com"
+            link: "https://proxy.buildfire.com"
         });
 })(window.angular);
