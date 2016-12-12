@@ -145,127 +145,134 @@
           }
         }
       }])
-      .factory('WooCommerceSDK', ['$q', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', 'SERVER_URL', '$http',
-          function ($q, STATUS_CODE, STATUS_MESSAGES, PAGINATION, SERVER_URL, $http) {
-              var initialize = function (storeURL, consumerKey, consumerSecret) {
-                  var deferred = $q.defer();
-                  if (!storeURL || !consumerKey || !consumerSecret) {
-                      deferred.reject(new Error({
-                          code: STATUS_CODE.UNDEFINED_DATA,
-                          message: STATUS_MESSAGES.UNDEFINED_DATA
-                      }));
-                  } else {
-                      $http.post(SERVER_URL.link + '/initialize', {
-                          storeURL: storeURL,
-                          consumerKey: consumerKey,
-                          consumerSecret: consumerSecret
-                      })
-                          .success(function (response) {
-                              deferred.resolve(response);
-                          })
-                          .error(function (error) {
-                              deferred.reject(error);
-                          })
-                  }
-                  return deferred.promise;
-              };
-              var getSections = function (storeURL, consumerKey, consumerSecret, pageNumber) {
-                  var deferred = $q.defer();
-                  var _url = '';
-                  if (!storeURL || !consumerKey || !consumerSecret) {
-                      deferred.reject(new Error({
-                          code: STATUS_CODE.UNDEFINED_DATA,
-                          message: STATUS_MESSAGES.UNDEFINED_DATA
-                      }));
-                  } else {
-                      $http.get(SERVER_URL.link + '/productCategories', {
-                          params: {
-                              pageSize: PAGINATION.sectionsCount,
-                              pageNumber: pageNumber || 1,
-                              storeURL: storeURL,
-                              consumerKey: consumerKey,
-                              consumerSecret: consumerSecret
-                          }
-                      })
-                          .success(function (response) {
-                              if(response)
-                                deferred.resolve(response);
-                              else
-                                deferred.resolve(null);
-                          })
-                          .error(function (err) {
-                              deferred.reject(err);
-                          })
-                  }
-                  return deferred.promise;
-              };
-              var getItems = function (storeURL, consumerKey, consumerSecret, slug, pageNumber) {
-                  var deferred = $q.defer();
-                  var _url = '';
-                  if (!storeURL && !consumerKey && !consumerSecret) {
-                      deferred.reject(new Error({
-                          code: STATUS_CODE.UNDEFINED_DATA,
-                          message: STATUS_MESSAGES.UNDEFINED_DATA
-                      }));
-                  } else {
-                      $http.get(SERVER_URL.link + '/getProductsByCategory', {
-                          params: {
-                              slug: slug,
-                              pageNumber: pageNumber || 1,
-                              pageSize: PAGINATION.sectionsCount,
-                              storeURL: storeURL,
-                              consumerKey: consumerKey,
-                              consumerSecret: consumerSecret
-                          }
-                      })
-                          .success(function (response) {
-                              if (response)
-                                  deferred.resolve(response);
-                              else
-                                  deferred.resolve(null);
-                          })
-                          .error(function (err) {
-                                deferred.reject(err);
-                          })
-                  }
-                  return deferred.promise;
-              };
-              var getProduct = function (storeURL, consumerKey, consumerSecret, id) {
-                  var deferred = $q.defer();
-                  var _url = '';
-                  if (!storeURL || !consumerKey || !consumerSecret) {
-                      deferred.reject(new Error({
-                          code: STATUS_CODE.UNDEFINED_DATA,
-                          message: STATUS_MESSAGES.UNDEFINED_DATA
-                      }));
-                  } else {
-                      $http.get(SERVER_URL.link + '/getProducts', {
-                          params: {
-                              id: id,
-                              storeURL: storeURL,
-                              consumerKey: consumerKey,
-                              consumerSecret: consumerSecret
-                          }
-                      })
-                          .success(function (response) {
-                              if(response)
-                                  deferred.resolve(response);
-                              else
-                                  deferred.resolve(null);
-                          })
-                          .error(function (err) {
-                              deferred.reject(err);
-                          })
-                  }
-                  return deferred.promise;
-              };
-              return {
-                  initialize: initialize,
-                  getSections: getSections,
-                  getItems: getItems,
-                  getProduct: getProduct
-              };
-          }])
+    .factory('WooCommerceSDK', ['$q', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', 'PROXY_SERVER', '$http',
+      function ($q, STATUS_CODE, STATUS_MESSAGES, PAGINATION, SERVER_URL, $http) {
+        var isAndroid = function () {
+          var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+          return (/android/i.test(userAgent));
+        };
+        var getProxyServerUrl = function () {
+          return isAndroid() ? PROXY_SERVER.serverUrl : PROXY_SERVER.secureServerUrl;
+        };
+        var initialize = function (storeURL, consumerKey, consumerSecret) {
+          var deferred = $q.defer();
+          if (!storeURL || !consumerKey || !consumerSecret) {
+            deferred.reject(new Error({
+              code: STATUS_CODE.UNDEFINED_DATA,
+              message: STATUS_MESSAGES.UNDEFINED_DATA
+            }));
+          } else {
+            $http.post(getProxyServerUrl() + '/initialize', {
+              storeURL: storeURL,
+              consumerKey: consumerKey,
+              consumerSecret: consumerSecret
+            })
+              .success(function (response) {
+                deferred.resolve(response);
+              })
+              .error(function (error) {
+                deferred.reject(error);
+              })
+          }
+          return deferred.promise;
+        };
+        var getSections = function (storeURL, consumerKey, consumerSecret, pageNumber) {
+          var deferred = $q.defer();
+          var _url = '';
+          if (!storeURL || !consumerKey || !consumerSecret) {
+            deferred.reject(new Error({
+              code: STATUS_CODE.UNDEFINED_DATA,
+              message: STATUS_MESSAGES.UNDEFINED_DATA
+            }));
+          } else {
+            $http.get(SERVER_URL.link + '/productCategories', {
+              params: {
+                pageSize: PAGINATION.sectionsCount,
+                pageNumber: pageNumber || 1,
+                storeURL: storeURL,
+                consumerKey: consumerKey,
+                consumerSecret: consumerSecret
+              }
+            })
+              .success(function (response) {
+                if (response)
+                  deferred.resolve(response);
+                else
+                  deferred.resolve(null);
+              })
+              .error(function (err) {
+                deferred.reject(err);
+              })
+          }
+          return deferred.promise;
+        };
+        var getItems = function (storeURL, consumerKey, consumerSecret, slug, pageNumber) {
+          var deferred = $q.defer();
+          var _url = '';
+          if (!storeURL && !consumerKey && !consumerSecret) {
+            deferred.reject(new Error({
+              code: STATUS_CODE.UNDEFINED_DATA,
+              message: STATUS_MESSAGES.UNDEFINED_DATA
+            }));
+          } else {
+            $http.get(SERVER_URL.link + '/getProductsByCategory', {
+              params: {
+                slug: slug,
+                pageNumber: pageNumber || 1,
+                pageSize: PAGINATION.sectionsCount,
+                storeURL: storeURL,
+                consumerKey: consumerKey,
+                consumerSecret: consumerSecret
+              }
+            })
+              .success(function (response) {
+                if (response)
+                  deferred.resolve(response);
+                else
+                  deferred.resolve(null);
+              })
+              .error(function (err) {
+                deferred.reject(err);
+              })
+          }
+          return deferred.promise;
+        };
+        var getProduct = function (storeURL, consumerKey, consumerSecret, id) {
+          var deferred = $q.defer();
+          var _url = '';
+          if (!storeURL || !consumerKey || !consumerSecret) {
+            deferred.reject(new Error({
+              code: STATUS_CODE.UNDEFINED_DATA,
+              message: STATUS_MESSAGES.UNDEFINED_DATA
+            }));
+          } else {
+            $http.get(SERVER_URL.link + '/getProducts', {
+              params: {
+                id: id,
+                storeURL: storeURL,
+                consumerKey: consumerKey,
+                consumerSecret: consumerSecret
+              }
+            })
+              .success(function (response) {
+                if (response)
+                  deferred.resolve(response);
+                else
+                  deferred.resolve(null);
+              })
+              .error(function (err) {
+                deferred.reject(err);
+              })
+          }
+          return deferred.promise;
+        };
+        return {
+          initialize: initialize,
+          getSections: getSections,
+          getItems: getItems,
+          getProduct: getProduct
+        };
+      }])
     .factory('Location', [function () {
       var _location = window.location;
       return {
