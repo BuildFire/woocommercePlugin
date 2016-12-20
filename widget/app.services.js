@@ -146,7 +146,7 @@
         }
       }])
     .factory('WooCommerceSDK', ['$q', 'STATUS_CODE', 'STATUS_MESSAGES', 'PAGINATION', 'PROXY_SERVER', '$http',
-      function ($q, STATUS_CODE, STATUS_MESSAGES, PAGINATION, SERVER_URL, $http) {
+      function ($q, STATUS_CODE, STATUS_MESSAGES, PAGINATION, PROXY_SERVER, $http) {
         var requiresHttps = function () {
           var useHttps = false;
           var userAgent = navigator.userAgent || navigator.vendor;
