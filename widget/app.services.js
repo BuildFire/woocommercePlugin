@@ -205,7 +205,7 @@
               message: STATUS_MESSAGES.UNDEFINED_DATA
             }));
           } else {
-            $http.get(SERVER_URL.link + '/productCategories', {
+            $http.get(getProxyServerUrl() + '/productCategories', {
               params: {
                 pageSize: PAGINATION.sectionsCount,
                 pageNumber: pageNumber || 1,
@@ -235,7 +235,7 @@
               message: STATUS_MESSAGES.UNDEFINED_DATA
             }));
           } else {
-            $http.get(SERVER_URL.link + '/getProductsByCategory', {
+            $http.get(getProxyServerUrl() + '/getProductsByCategory', {
               params: {
                 slug: slug,
                 pageNumber: pageNumber || 1,
@@ -266,7 +266,7 @@
               message: STATUS_MESSAGES.UNDEFINED_DATA
             }));
           } else {
-            $http.get(SERVER_URL.link + '/getProducts', {
+            $http.get(getProxyServerUrl() + '/getProducts', {
               params: {
                 id: id,
                 storeURL: storeURL,
